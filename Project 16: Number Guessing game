@@ -1,0 +1,135 @@
+##FRONT-END CODE:(HTML,CSS,JS)
+A simple implementation of both the front end and back end for the game. Here’s a high-efficiency example using HTML, CSS, and JavaScript for the front end, and Node.js with Express for the back end.
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        input {
+            padding: 10px;
+            width: 50px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Guess the Number!</h1>
+    <input type="number" id="guess" min="1" max="100" placeholder="1-100">
+    <button onclick="makeGuess()">Guess</button>
+    <div class="message" id="message"></div>
+
+    <script>
+        let randomNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        function makeGuess() {
+            const userGuess = Number(document.getElementById('guess').value);
+            attempts++;
+            let message = '';
+
+            if (attempts > maxAttempts) {
+                message = `Game Over! The number was ${randomNumber}.`;
+                resetGame();
+            } else if (userGuess < randomNumber) {
+                message = 'Too low! Try again.';
+            } else if (userGuess > randomNumber) {
+                message = 'Too high! Try again.';
+            } else {
+                message = 'Congratulations! You guessed it!';
+                resetGame();
+            }
+            document.getElementById('message').textContent = message;
+        }
+
+        function resetGame() {
+            randomNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 0;
+            document.getElementById('guess').value = '';
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## BACK-END CODE:
+Install Dependencies: Before running the backend code, make sure you have Node.js and Express installed. You can create a new directory, run (npm init -y), and install Express using:
+npm install express
+
+
+
+Create the Server:
+
+const express = require('express');
+const app = express();
+const port = 3000;
+app.use(express.json());
+app.use(express.static('public'));
+app.get('/new-game', (req, res) => {
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
+    res.json({ number: randomNumber });
+});
+app.post('/guess', (req, res) => {
+    const { guess, number } = req.body;
+    let message;
+    
+    if (guess < number) {
+        message = 'Too low!';
+    } else if (guess > number) {
+        message = 'Too high!';
+    } else {
+        message = 'Congratulations! You guessed it!';
+    }
+    
+    res.json({ message });
+});
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
+
+Front End: Save the HTML code above as index.html in a directory called public.
+Back End: Save the Node.js code in a file called server.js in the root directory.
+Run the Server: Use the command:
+node server.js
+Access the Game: Open your web browser and go to http://localhost:3000.
+
+
+
+
+This implementation provides a basic structure for the Number Guessing Game with a functional front end and back end. You can extend it further with features like user sessions, persistent score tracking, and a more polished UI.
